@@ -1973,9 +1973,9 @@ function initExtension() {
 		content: function( response ) {
 			var element = $( this );
 			
-			/*if ( element.hasClass( "in-chat-emote" ) ) {
+			if ( element.hasClass( "in-chat-emote" ) ) {
 				return `<img class="emote-preview" src="${element.attr( "data-fullemote" )}"> </img> <p class="tooltip-text">${element.attr( "title" )} </br>Emote de ${element.attr( "data-from" )}</p>`;
-			}*/
+			}
 			
 			if ( element.hasClass( "btv-badge" ) ) {
 				// mostrar puntaje / tiempo de visualisacion
@@ -3523,12 +3523,15 @@ async function initUsernameAutocomplete() {
 	});
 }
 
-document.addEventListener('copy', (event) => {
-    const selection = document.getSelection();
-	console.log(selection)
-    event.clipboardData.setData('text/plain', selection.toString().replace('[','').replace(']','').replace(']',''));
-    event.preventDefault();
-});
+if (parseFloat(navigator.userAgent.split('Firefox/').pop(), 10) >= 92){
+
+	document.addEventListener('copy', (event) => {
+		const selection = document.getSelection();
+		console.log(selection)
+		event.clipboardData.setData('text/plain', selection.toString().replace('[','').replace(']','').replace(']',''));
+		event.preventDefault();
+	});
+}
 
 
 // //init estension when the page is first loaded
