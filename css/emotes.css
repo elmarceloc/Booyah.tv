@@ -488,3 +488,45 @@ body {
   overflow-x: hidden;
 	overflow-y: scroll;
 }
+
+.donator-input{
+  border: none!important;
+  padding: 6px!important;
+  border-radius: 5px!important;
+  width: 400px!important;
+  color:black!important;
+}
+.donator-input-half{
+  width: 200px!important;
+  display: inline-block!important;
+  border-radius: 5px!important;
+  padding: 6px!important;
+  color:black!important;
+}
+
+#emote-url{
+  color: black!important;
+}
+
+.submit-donator{
+  border-radius: 10px;
+  background-image: linear-gradient(265deg, #9b06e0 0%, #9801df 100%);
+  color: white;
+  border:none;
+  padding:8px;
+}
+#colorpicker{
+  width: 150px;
+  border: none;
+  background-color: transparent
+}
+.donator-title{
+  padding-bottom: 17px;
+}
+.donator-label{
+  color: #adadba;
+  padding-bottom: 10px;
+}
+#dono{
+  margin: 24px 0px;
+}

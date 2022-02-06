@@ -1652,26 +1652,22 @@ function replace_srcset(target, replacement)
 
 function insertAccount(){
 	var donoPreferences = `
-	<div id="dono" class="description-row" style="margin: 24px;">
-  <h2 class="components-title-h2">
-    Configuración de Donador de Booyah TV<img
-      src="https://cdn.betterttv.net/emote/616162ffb63cc97ee6d57add/1x"
-      style="width: 28px"
-    /><img />
+	<div id="dono" class="description-row">
+  <h2 class="components-title-h2 donator-title">
+    Configuración de Donador de Booyah TV
   </h2>
   <div id="usernamecolor" class="row">
-    <div class="label empty"><span>Color del nombre</span></div>
+    <div class="donator-label empty"><span>Color del nombre</span></div>
     <div class="value empty">
       <input
         type="color"
         id="colorpicker"
         onchange="clickColor()"
         value="#ff0000"
-        style="width: 50%; border: none; background-color: transparent"
       />
     </div>
   </div>
-  <div class="label" style="width: 400px">
+  <div class="donator-label" width: 400px;margin-top:15px>
     Link del emblema (Puede ser de
     <a
       href="https://betterttv.com/emotes/top"
@@ -1695,7 +1691,7 @@ function insertAccount(){
       "
     >
       <input
-        class="components-input-element"
+        class="donator-input"
         maxlength="1024"
         rows="4"
         placeholder="https://www.frankerfacez.com/emoticon/410314-Okayge"
@@ -1704,22 +1700,19 @@ function insertAccount(){
       />
     </div>
     <div
-      class="label"
+      class="donator-label"
       style="width: 500px; color: red; display: none"
       id="error-emote"
     >
       Debes poner un link valido de BTTV o de FFZ o dejarlo en blanco si
       prefieres el emblema por defecto
     </div>
-    <div style="margin-bottom: 10px">
-	  <div class="label" style="width: 400px">Mensaje del Emblema</div>
-	  <div class="
-        components-input components-input-textarea components-input-size-normal
-      " style="
-    width: 50%;
-">
-      <input class="components-input-element" maxlength="1024" rows="4" placeholder="Donador de Booyah.tv" id="message-title" style="border: none; !important">
-    <input class="components-input-element" maxlength="1024" rows="4" placeholder="<3" id="message-subtitle" style="border: none; !important;margin-left: 10px;"></div>
+    <div style="margin-bottom: 20px;margin-top:20px">
+	  <div class="donator-label" style="width: 400px;margin-top:15px">Mensaje del Emblema</div>
+	  <div style="margin-bottom: 20px">
+      	<input class="donator-input-half" maxlength="1024" rows="4" placeholder="Donador de Booyah.tv" id="message-title" style="border: none; !important">
+    	<input class="donator-input-half" maxlength="1024" rows="4" placeholder="<3" id="message-subtitle" style="border: none; !important;margin-left: 10px;">
+	  </div>
       <img
 	    class="btv-badge"
 		rel="badge"
@@ -1746,18 +1739,7 @@ function insertAccount(){
     </div>
   </div>
   <button
-    class="
-      components-button
-      components-button-size-small
-      components-button-type-orange
-      desktop
-      components-button-inline
-    "
-    style="
-      background-image: linear-gradient(265deg, #9b06e0 0%, #9801df 100%);
-      color: white;
-    "
-  >
+  class="submit-donator">
     <span class="button-content" id="send-preferences"
       >Actualizar configuración de donador</span
     >
@@ -2827,7 +2809,7 @@ function twitchChat() {
 
   twitchChatHTML = `<div id="twitchchat" class="btn-ellipsis">
 		<div  onclick="window.open('https://www.twitch.tv/popout/${channelName}/chat?popout=','popup','width=400,height=660');" class="components-icon components-icon-channel-more">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#adadba" d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="#adadba" d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
 		</div>
 	</div>`;
 
@@ -2850,8 +2832,8 @@ function delay(){
 	>
 		<svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
+		width="18"
+		height="18"
 		viewBox="0 0 24 24"
 		fill="#adadba"
 		>
@@ -2913,13 +2895,7 @@ function clip() {
 
 		class="components-icon components-icon-channel-more"
 	>
-	<svg fill="#f44336" width="24px" height="24px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px" class="ScIconSVG-sc-1bgeryd-1 eOJUoR"><g><path d="M14.594 4.495l-.585-1.91L15.922 2l.585 1.91-1.913.585zM11.14 3.46l.585 1.911 1.913-.584-.585-1.91-1.913.583zM8.856 6.247l-.584-1.91 1.912-.584.585 1.91-1.913.584zM5.403 5.213l.584 1.91L7.9 6.54l-.585-1.911-1.912.584zM2.534 6.09L3.118 8l1.913-.584-.585-1.91-1.912.583zM5 9H3v7a2 2 0 002 2h10a2 2 0 002-2V9h-2v7H5V9z"></path><path d="M8 9H6v2h2V9zM9 9h2v2H9V9zM14 9h-2v2h2V9z"></path></g></svg>
-	<span style="
-    position: absolute;
-    bottom: 2px;
-    font-size: 12px;
-    color: #f44336;
-">Clip</span>
+	<svg fill="#adadba" width="18px" height="18px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px" class="ScIconSVG-sc-1bgeryd-1 eOJUoR"><g><path d="M14.594 4.495l-.585-1.91L15.922 2l.585 1.91-1.913.585zM11.14 3.46l.585 1.911 1.913-.584-.585-1.91-1.913.583zM8.856 6.247l-.584-1.91 1.912-.584.585 1.91-1.913.584zM5.403 5.213l.584 1.91L7.9 6.54l-.585-1.911-1.912.584zM2.534 6.09L3.118 8l1.913-.584-.585-1.91-1.912.583zM5 9H3v7a2 2 0 002 2h10a2 2 0 002-2V9h-2v7H5V9z"></path><path d="M8 9H6v2h2V9zM9 9h2v2H9V9zM14 9h-2v2h2V9z"></path></g></svg>
 	</div>
 	</div>
 	`
