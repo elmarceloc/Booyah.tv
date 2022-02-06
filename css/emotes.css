@@ -218,7 +218,7 @@ body {
 }
 .wrapperTitle{
   position: relative !important;
-  left: -80px !important;
+  left: -70px!important;
 }
 #channelIcon {
   width: 24px;
@@ -227,7 +227,8 @@ body {
 }
 
 .emoteCategory {
-  padding: 12px 12px !important;
+  padding: 15px!important;
+  background: hsl(240deg 10% 12%);
 }
 
 .emoteCategory span {
@@ -270,7 +271,7 @@ body {
 .foldArrow {
   /*position: absolute!important;*/
   position: relative !important;
-  right: -310px;
+  left: 110px!important;
   color: rgb(255, 176, 0);
 }
 
