@@ -1973,9 +1973,10 @@ function initExtension() {
 		content: function( response ) {
 			var element = $( this );
 			
-			/*if ( element.hasClass( "in-chat-emote" ) ) {
+			// si se esta en firefox
+			if ( element.hasClass( "in-chat-emote" ) && parseFloat(navigator.userAgent.split('Firefox/').pop(), 10) >= 92) {
 				return `<img class="emote-preview" src="${element.attr( "data-fullemote" )}"> </img> <p class="tooltip-text">${element.attr( "title" )} </br>Emote de ${element.attr( "data-from" )}</p>`;
-			}*/
+			}
 			
 			if ( element.hasClass( "btv-badge" ) ) {
 				// mostrar puntaje / tiempo de visualisacion
