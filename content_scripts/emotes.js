@@ -2730,33 +2730,63 @@ function insertEmotesPanel(currentChannel) {
 		);
 	});
 	}
-
-
-
-	var emoteCount = bttvGlobalEmotes.length + 1 +  bttvChannelEmotes.length + 1 + frankerFaceZ.length + 1 + twitchEmotes.length + 1 + sevenTvChannelEmotes.length + 1
-	//<span>Emotes</span>
-	//<span class="ccu">${ emoteCount } emotes disponibles  <a target="__blank" href="https://bit.ly/3mvUYM0" title="Nuevo: Emblema de donador"><img class="supporter-info" src="https://cdn.betterttv.net/emote/616162ffb63cc97ee6d57add/1x"></img></a> </span>
+	
 	var emotesHTML =
 	`<div class="
 		components-popover-container components-chat-menu-users-popover
 		theme-dark"
-		id="emoteList" style="min-height: 300px;">
-		<div class="title">
+		id="emoteList">
 		
-		</div>
-		<div class="user-list-wrapper" data-infinite-scrollable="true">
-			<div id="emoteGroups" class="components-infinite-view has-data" style="text-align: center;">
+		<div class="emote-list-wrapper" data-infinite-scrollable="true">
+			<div id="emoteGroups">
 				<div>
-				<div class="title emoteCategory" title="twitch"><div id="twitchicon"><span class="wrapperTitle">Emotes de Twitch</span><span class="foldArrow">▼</span></div></div>
-				<div id="twitch" class="wrapper">${twitchHTML} </div>
-				${channelSubsEmotes && channelSubsEmotes.length > 0 ? `<div class="title emoteCategory" title="subs"><div id="subsicon"><span class="wrapperTitle">Emotes de subs</span><span class="foldArrow">▼</span></div>` : ''}</div>
-				<div id="subs" class="wrapper"> ${subHTML} </div>
-				${channel.bttv ? `<div class="title emoteCategory" title="bttv"><div id="bttvicon"><span class="wrapperTitle">Emotes Globales</span><span class="foldArrow">▼</span></div>`: ''}</div>
-				<div id="bttv" class="wrapper">${channel.bttv ? bttvHTML : ''}</div>
-				${ channel.bttv || channel.ffz ? `<div class="title emoteCategory" title="channelEmotes"><div id="ffzicon"><span class="wrapperTitle">Emotes del canal</span><span class="foldArrow">▼</span></div>` : ''}</div>
-				<div id="channelEmotes" class="wrapper"> ${channelHTML}
-				${ffzHTML} </div>
+					<div class="title emoteCategory" title="twitch">
+						<div id="twitchicon">
+							<span class="wrapperTitle">Emotes de Twitch</span>
+							<span class="foldArrow">▼</span>
+						</div>
+					</div>
+
+					<div id="twitch" class="wrapper">${twitchHTML} </div>
+
+					${channelSubsEmotes && channelSubsEmotes.length > 0 ? 
+					`<div class="title emoteCategory" title="subs">
+						<div id="subsicon">
+							<span class="wrapperTitle">Emotes de subs</span>
+							<span class="foldArrow">▼</span>
+						</div>
+					</div>
+
+					<div id="subs" class="wrapper"> ${subHTML} </div>` : ''}
+
+					${channel.bttv ? `
+					<div class="title emoteCategory" title="bttv">
+						<div id="bttvicon">
+							<span class="wrapperTitle">Emotes Globales</span>
+							<span class="foldArrow">▼</span>
+						</div>
+					</div>
+
+					<div id="bttv" class="wrapper">${ bttvHTML }</div>`: ''}
+					
+					${ channel.bttv || channel.ffz ? 
+					`<div class="title emoteCategory" title="channelEmotes">
+						<div id="ffzicon">
+							<span class="wrapperTitle">Emotes del canal</span>
+							<span class="foldArrow">▼</span>
+						</div>
+					</div>
+
+					<div id="channelEmotes" class="wrapper"> 
+						${channelHTML}
+						${ffzHTML} 
+					</div>` : ''}
 				</div>
+			</div>
+
+			<div class="title spam-dono">
+				<span style="color: rgb(255, 176, 0);">$1 USD</span> = Emblema personalizado
+				<a type="button" target="__blank" href="https://bit.ly/3J772Nw" class="vermas">Ver más</a>
 			</div>
 		</div>
 	</div>`

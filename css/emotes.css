@@ -242,6 +242,7 @@ body {
   overflow: hidden;
   width: 100%;
   max-height: 300px;
+  min-height: 300px;
   display: none;
   top: -56px;
 }
@@ -530,4 +531,22 @@ body {
 }
 #dono{
   margin: 24px 0px;
+}
+.emote-list-wrapper{
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+#emoteGroups{
+  text-align: center;
+}
+.vermas{
+  border: none;
+  padding: 4px 7px;
+  background: #303034;
+  border-radius: 17px;
+  color: white;
+  float: right;
+}
+.spam-dono{
+  padding: 10px 10px!important;
 }
