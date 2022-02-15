@@ -1741,6 +1741,14 @@ function insertAccount(){
 			
 		$('.description-row').after(donoPreferences)
 
+		$('#message-title').change(function() { 
+			$("#emote-preview").attr('title', $('#message-title').val());
+		})
+
+		$('#message-subtitle').change(function() { 
+			$("#emote-preview").attr('data-subtitle', $('#message-subtitle').val());
+		})
+
 		$( "#colorpicker" ).change(function() { 
 		
 			const newColor = $( this ).val()
@@ -1759,12 +1767,11 @@ function insertAccount(){
 				var url = ''
 		
 				if(emote.source == 'bttv'){
-					url = 'https://cdn.betterttv.net/emote/'+emote.id+'/1x'
+					url = 'https://cdn.betterttv.net/emote/'+emote.id+'/3x'
 				}else if(emote.source == 'ffz'){
-					url = 'https://cdn.frankerfacez.com/emoticon/'+emote.id+'/1'
+					url = 'https://cdn.frankerfacez.com/emoticon/'+emote.id+'/4'
 				}
 		
-				$("#emote-preview").attr('data-subtitle', '<3');
 				$("#emote-preview").attr('data-fullimage', url);
 
 				$("#emote-preview").attr('src', url);
@@ -1840,10 +1847,12 @@ function insertAccount(){
 
 				if (data.preferences.title){
 					$('#message-title').val(data.preferences.title)
+					$("#emote-preview").attr('title', data.preferences.title);
 				}
-
+				
 				if (data.preferences.subtitle){
 					$('#message-subtitle').val(data.preferences.subtitle)
+					$("#emote-preview").attr('data-subtitle', data.preferences.subtitle);
 				}
 
 				if (data.preferences.color){
@@ -1868,8 +1877,7 @@ function insertAccount(){
 
 					}
 		
-					$("#emote-preview").attr('title-subtitle', '<3');
-					$("#emote-preview").attr('data-subtitle', '<3');
+
 					$("#emote-preview").attr('data-fullimage', url);	
 
 					$("#emote-preview").attr('src', url);
@@ -2962,7 +2970,7 @@ function insertSettings() {
 		<div id="settingsbtn" class="views-headers-tutorial-menu" data-v-fd2acb43="">
 		<div class="icon-tutorial" data-v-fd2acb43="">
 			<div class="components-icon components-icon-stream-help" data-v-fd2acb43="" data-v-aca1e938="">
-				<img src="https://i.imgur.com/zdDgfvr.png" alt="" srcset="">
+				<img src="https://i.imgur.com/SnJ5ChX.png" alt="" srcset="">
 			</div>
 		</div>
 	</div>`).ready(function () {
@@ -3727,6 +3735,7 @@ function openConfigs(){
 				  <input class="donator-input-half" maxlength="1024" rows="4" placeholder="Donador de Booyah.tv" id="message-title" style="border: none; !important">
 				<input class="donator-input-half" maxlength="1024" rows="4" placeholder="<3" id="message-subtitle" style="border: none; !important;margin-left: 10px;">
 			  </div>
+			 
 			  <img
 				class="btv-badge"
 				rel="badge"
@@ -3797,103 +3806,170 @@ function openConfigs(){
 					});
 				}
 
-				// vip configutation
-				if(isVip){
-					$( "#send-preferences-config" ).click(async function() { 
-						const nickname = $('.nickname-row .value').text()
-						const newColor = $('#colorpicker').val()
-						const emoteUrl = $('#emote-url').val()
-					
-						const messagetitle = $('#message-title').val()
-						const messagesubtitle = $('#message-subtitle').val()
-			
-			
-						const emote = getEmote(emoteUrl)
-					
-						if (!emote && emoteUrl != '') {
-							console.log('Emote is not valid')
-							return
-						}
-						const rawResponse = await fetch(booyahApiBaseURL+'profile/edit', {
-							method: 'POST',
-							headers: {
-							'Accept': 'application/json',
-							'Content-Type': 'application/json'
-							},
-							body: JSON.stringify(
-								{
-									nickname: nickname,
-									newColor: newColor,
-									badgeUrl: emoteUrl,
-									title: messagetitle,
-									subtitle: messagesubtitle
-								}
-							)
-						});
-						
-						const result = await rawResponse.json();
-						
-						if (result.success){
-							alert('Tu emblema a sido enviado a revición, sera actualizado en breve ')
-						}else{
-							console.log('error on update',result)
-						}
-					
-					})
-			
-					
-					fetch(booyahApiBaseURL+'profile/preferences?nickname='+selfUsername)
-					.then(response => response.json())
-					.then(data => {
-						
-						if(data.success){
-							
-							$('#nickname-preview').text(selfUsername)
+			})
+
+			// vip configutation
+			if(isVip){
+
+				$( "#colorpicker" ).change(function() { 
 		
-							if (data.preferences.title){
-								$('#message-title').val(data.preferences.title)
-							}
-		
-							if (data.preferences.subtitle){
-								$('#message-subtitle').val(data.preferences.subtitle)
-							}
-		
-							if (data.preferences.color){
-								$('#nickname-preview').attr('style', 'color: '+ data.preferences.color +' !important');
-								$('#colorpicker').val(data.preferences.color)
-							}else{
-								$('#colorpicker').val(getColorByNickname(nickname))
-								$('#nickname-preview').attr('style', 'color: '+ getColorByNickname(nickname) +' !important');
-							}
-					
-							if (data.preferences.badge){
-								var url = ''
-								var emoteURL = ''
+					const newColor = $( this ).val()
+					$('#nickname-preview').attr('style', 'color: '+ newColor +' !important');
 				
-								if(data.preferences.badge_source == 'bttv'){
-									url = 'https://cdn.betterttv.net/emote/'+data.preferences.badge+'/1x'
-									emoteURL = 'https://betterttv.com/emotes/'+data.preferences.badge
-									
-								}else if(data.preferences.badge_source == 'ffz'){
-									url = 'https://cdn.frankerfacez.com/emoticon/'+data.preferences.badge+'/1'
-									emoteURL = 'https://www.frankerfacez.com/emoticon/'+data.preferences.badge+'-'
-		
-								}
-					
-								$("#emote-preview").attr('title-subtitle', '<3');
-								$("#emote-preview").attr('data-subtitle', '<3');
-								$("#emote-preview").attr('data-fullimage', url);	
-		
-								$("#emote-preview").attr('src', url);
-								$('#emote-url').val(emoteURL)
-		
-							}
+				});
 				
+
+				/*<img 
+				title="emote culiao"
+				  src="https://cdn.betterttv.net/emote/6209f16e06fd6a9f5be47681/1x"
+				  class="btv-badge" 
+				  data-subtitle="xddd" 
+				  data-fullimage="https://cdn.betterttv.net/emote/6209f16e06fd6a9f5be47681/3x"
+				   rel="badge">*/
+
+				$('#message-title').change(function() { 
+					$("#emote-preview").attr('title', $('#message-title').val());
+				})
+
+				$('#message-subtitle').change(function() { 
+					$("#emote-preview").attr('data-subtitle', $('#message-subtitle').val());
+				})
+
+				$( "#emote-url" ).change(function() { 
+					
+					const newUrl = $( this ).val()
+					const emote = getEmote(newUrl)
+				
+					console.log(emote)
+				
+					if (emote){
+						var url = ''
+				
+						if(emote.source == 'bttv'){
+							url = 'https://cdn.betterttv.net/emote/'+emote.id+'/3x'
+						}else if(emote.source == 'ffz'){
+							url = 'https://cdn.frankerfacez.com/emoticon/'+emote.id+'/4'
 						}
+				
+						//$("#emote-preview").attr('data-subtitle', '<3');
+						$("#emote-preview").attr('data-fullimage', url);
+		
+						$("#emote-preview").attr('src', url);
+						$("#emote-url").attr('style', 'border: none; !important');
+						$("#error-emote").hide()
+				
+					}else{
+						// is is not an emote, but is empty, dont show error
+						if (newUrl == '') {
+							$("#emote-url").attr('style', 'border: none; !important');
+							$("#error-emote").hide()
+						}else {
+							$("#emote-url").attr('style', 'border: red solid 2px; !important');
+							$("#error-emote").show()
+						}
+					}
+				
+				
+				});
+
+				$( "#send-preferences-config" ).click(async function() { 
+					console.log('changed')
+					const nickname = selfUsername
+					const newColor = $('#colorpicker').val()
+					const emoteUrl = $('#emote-url').val()
+				
+					const messagetitle = $('#message-title').val()
+					const messagesubtitle = $('#message-subtitle').val()
+
+
+					const emote = getEmote(emoteUrl)
+				
+					if (!emote && emoteUrl != '') {
+						console.log('Emote is not valid')
+						return
+					}
+					const rawResponse = await fetch(booyahApiBaseURL+'profile/edit', {
+						method: 'POST',
+						headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(
+							{
+								nickname: nickname,
+								newColor: newColor,
+								badgeUrl: emoteUrl,
+								title: messagetitle,
+								subtitle: messagesubtitle
+							}
+						)
 					});
 					
-				}
-			})
+					const result = await rawResponse.json();
+					
+					if (result.success){
+						alert('Tu emblema a sido enviado a revición, sera actualizado en breve ')
+					}else{
+						console.log('error on update',result)
+					}
+				
+				})
+
+				
+				fetch(booyahApiBaseURL+'profile/preferences?nickname='+selfUsername)
+				.then(response => response.json())
+				.then(data => {
+					
+					if(data.success){
+						
+						$('#nickname-preview').text(selfUsername)
+
+						if (data.preferences.title){
+							$('#message-title').val(data.preferences.title)
+							$("#emote-preview").attr('title', data.preferences.title);
+
+						}
+
+						if (data.preferences.subtitle){
+							$('#message-subtitle').val(data.preferences.subtitle)
+							$("#emote-preview").attr('data-subtitle', data.preferences.subtitle);
+
+						}
+
+						if (data.preferences.color){
+							$('#nickname-preview').attr('style', 'color: '+ data.preferences.color +' !important');
+							$('#colorpicker').val(data.preferences.color)
+						}else{
+							$('#colorpicker').val(getColorByNickname(nickname))
+							$('#nickname-preview').attr('style', 'color: '+ getColorByNickname(nickname) +' !important');
+						}
+				
+						if (data.preferences.badge){
+							var url = ''
+							var emoteURL = ''
+
+							if(data.preferences.badge_source == 'bttv'){
+								url = 'https://cdn.betterttv.net/emote/'+data.preferences.badge+'/1x'
+								emoteURL = 'https://betterttv.com/emotes/'+data.preferences.badge
+								
+							}else if(data.preferences.badge_source == 'ffz'){
+								url = 'https://cdn.frankerfacez.com/emoticon/'+data.preferences.badge+'/1'
+								emoteURL = 'https://www.frankerfacez.com/emoticon/'+data.preferences.badge+'-'
+
+							}
+				
+							$("#emote-preview").attr('data-fullimage', url);	
+
+							$("#emote-preview").attr('src', url);
+							$('#emote-url').val(emoteURL)
+
+						}
+
+					}
+				});
+				
+			}
+
 			// closes the dialog
 			$( "#closeconfigs" ).click(function() {
 				$(this).closest('.ui-dialog-content').dialog('destroy').remove();
