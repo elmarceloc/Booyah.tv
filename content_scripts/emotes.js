@@ -9,6 +9,7 @@ const frankerfaceZChannelBaseURL = "https://api.frankerfacez.com/v1/room/id/";
 
 const booyahApiBaseURL = "https://bapi.zzls.xyz/api/" // "https://bapi.zzls.xyz/api/"
 
+var isVip = false
 
 // twitch id grabed at https://api.twitch.tv/kraken/users?login={username} -h Accept = application/vnd.twitchtv.v5+json, Client-ID = cclk5hafv1i7lksfauerry4w7ythu2
 
@@ -1500,18 +1501,7 @@ function checkTag(event, messageContent, usernameContainer,usernameElement, mess
 
 		if ((usernameElement.innerHTML == channel.botName && messageContent.includes(selfUsername)) && (usernameElement.innerHTML.toLowerCase() != channel.name.toLowerCase())){
 			taggedUsers.push(selfUsername)
-			// if its a clip message
 
-			if(messageContent.match(clipsRegex) !== null){
-				messageContent.match(clipsRegex).forEach((clipURL) => {
-					window.open(clipURL);
-
-				});
-			}
-
-			if(usernameElement.innerHTML.includes('https://streamvip.app/clips/')){
-
-			}
 		}
 
 		taggedUsers.forEach(username =>{
@@ -1892,8 +1882,6 @@ function insertAccount(){
 			});
 
 
-
-
 		
 	}
 }
@@ -1931,7 +1919,8 @@ function initExtension() {
 						channelBooyahtvBadges = response
 						
 						if (selfUsername in channelBooyahtvBadges) {
-							
+							isVip = true
+							console.log(isVip)
 							setTimeout(function() {
 								if (currentURL.includes('accounts') ) {
 									insertAccount()
@@ -2017,6 +2006,13 @@ function initExtension() {
 
 	console.log("[BOOYAH.TV] CURRENT URL: " + currentURL)
 
+
+	var headerExists = setInterval(function() {
+		if ($('.views-headers-notification-menu').first().length) {
+			clearInterval(headerExists);
+			insertSettings()
+		}
+	}, 1000)
 	
 	channels.forEach((currentChannel) => {
 		// check if user is in channel or its chatroom (popup)
@@ -2291,7 +2287,7 @@ function initExtension() {
 						clearInterval(panelsExist);
 						insertChannelPanels(currentChannel)
 					}
-				}, 500)
+				}, 1000)
 
 				// si el usuario tiene activa la tabla de posisiones (streamVip)
 				if(channel.leaderboard){
@@ -2802,9 +2798,9 @@ function insertEmotesPanel(currentChannel) {
 	.append(emotesHTML)
 	.ready(function () {
 		$("#emoteGroups .title").click(function () {
-		let title = $(this).attr("title");
+			let title = $(this).attr("title");
 
-		foldEmoteGroup($(this).find(".foldArrow")[0], title);
+			foldEmoteGroup($(this).find(".foldArrow")[0], title);
 		});
 	});
 	
@@ -2954,6 +2950,28 @@ function insertChannelPanels(channel) {
 		$('.channel-box').first().append(panelsHTML);
 
 	}
+}
+
+function insertSettings() {
+	
+	if (document.body.contains(document.getElementById("settingsbtn"))){
+		document.getElementById("settingsbtn").remove();
+	};
+	
+	$(".views-headers-notification-menu").first().after(`
+		<div id="settingsbtn" class="views-headers-tutorial-menu" data-v-fd2acb43="">
+		<div class="icon-tutorial" data-v-fd2acb43="">
+			<div class="components-icon components-icon-stream-help" data-v-fd2acb43="" data-v-aca1e938="">
+				<img src="https://i.imgur.com/zdDgfvr.png" alt="" srcset="">
+			</div>
+		</div>
+	</div>`).ready(function () {
+		
+		$("#settingsbtn").click(function () {
+			openConfigs()
+		});
+	})
+
 }
 
 function insertClipBtn(parent) {
@@ -3541,6 +3559,388 @@ if (parseFloat(navigator.userAgent.split('Firefox/').pop(), 10) >= 92){
 }
 
 
+
+function toggleCSS(file, isChecked) {
+	if (isChecked){
+		var link = document.createElement("link");
+
+		link.href = chrome.runtime.getURL('css/optional/' + file + '.css');
+		link.id = file;
+		link.type = "text/css";
+		link.rel = "stylesheet";
+		document.getElementsByTagName("html")[0].appendChild(link);
+	
+		console.log('[BOOYAH.TV] '+ file +'.css loaded')
+	}else{
+		var cssNode = document.getElementById(file);
+		cssNode && cssNode.parentNode.removeChild(cssNode);
+
+		console.log('[BOOYAH.TV] '+ file +'.css unloaded')
+	}
+
+}
+
+function getConfigNames(type) {
+	return configs.reduce((results, config) => {
+		if(type == 'css'){
+			results.push(config.name);
+			return results;
+		}
+	}, []);
+}
+
+function addConfigGroup(savedConfigs, section){
+	var html = ''
+
+	configs.forEach(config => {
+
+		if (config.section == section){
+			const savedConfig = Object.keys(savedConfigs).find(key=> key === config.name);
+
+			html += `
+			<div class="config-group" id="config-${config.name}">
+				<input ${savedConfigs[savedConfig] ? 'checked' : ''} type="checkbox" id="toggle-${config.type}-${config.name}"></input>
+				<label for="toggle-${config.type}-${config.name}">${config.label}</label>
+			</div>
+			`
+		}
+
+	})
+
+	return html
+	
+}
+
+const configs = [
+	{
+		name: 'hidebadges',
+		label: 'Ocultar emblemas',
+		section: 'chat',
+		type: 'css',
+	},
+	{
+		name: 'interlined',
+		label: 'Separar mensajes',
+		section: 'chat',
+		type: 'css',
+	},
+	{
+		name: 'distractfree',
+		label: 'Modo "libre de distracciones"',
+		section: 'page',
+		type: 'css'
+	},
+	{
+		name: 'hideviewers',
+		label: 'Ocultar viewers',
+		section: 'page',
+		type: 'css'
+	},
+	{
+		name: 'hiderecommended',
+		label: 'Ocultar canales recomendados',
+		section: 'page',
+		type: 'css'
+	}
+	// TODO: ver mensajes anteriores, tab autocomplete, home custom
+]
+
+//openConfigs()
+
+function openConfigs(){
+
+	chrome.storage.local.get(getConfigNames('css'), function(savedConfigs){
+		var dialogHTML = `
+		<div id="dialog" title="Basic dialog">
+		
+		<div class="config-header">
+		<img src="https://cdn.betterttv.net/emote/5b490e73cf46791f8491f6f4/1x" class="config-icon"></img> Configuración de booyah tv
+		<span id="closeconfigs">X</span>
+		</div>
+		<div class="config-container">
+
+		<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/61e89a8606fd6a9f5be15e68/2x" class="subtitle-icon"></img>El chat<h2>
+		`
+
+		dialogHTML += addConfigGroup(savedConfigs, 'chat')
+
+		dialogHTML += `<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/6152a3e7b63cc97ee6d3b203/1x" class="subtitle-icon"></img>La página<h2>`
+		
+		dialogHTML += addConfigGroup(savedConfigs, 'page')
+
+
+		if (isVip) {
+			dialogHTML += `<h2 class="config-subtitle">
+			<img src="https://cdn.frankerfacez.com/emote/244322/1" class="subtitle-icon"></img>
+			<img src="https://cdn.betterttv.net/emote/601ff73c2762ec6cacb97770/1x" class="subtitle-icon"></img>
+			Donador<h2>
+			
+			<div class="config-group"  style="display: grid;>
+				<label>Color del nombre</label>
+
+				<input
+					type="color"
+					id="colorpicker"
+					onchange="clickColor()"
+					value="#ff0000"
+					style="display:block"
+				/>
+			</div>
+
+			<div class="config-group">
+			<label>Link del emblema (Puede ser de
+			<a
+			  href="https://betterttv.com/emotes/top"
+			  style="color: #7985E6"
+			  target="__blank"
+			  >Better TTV</a
+			>
+			o
+			<a
+			  href="https://www.frankerfacez.com/emoticons/"
+			  style="color: #7985E6"
+			  target="__blank"
+			  >Franker Face Z</a
+			>
+			)</label>
+			</div>
+		  <div>
+			  <input
+				class="donator-input"
+				maxlength="1024"
+				rows="4"
+				placeholder="https://www.frankerfacez.com/emoticon/410314-Okayge"
+				id="emote-url"
+				style="border: none; !important"
+			  />
+			<div
+			  class="donator-label"
+			  style="width: 500px; color: red; display: none"
+			  id="error-emote"
+			>
+			  Debes poner un link valido de BTTV o de FFZ o dejarlo en blanco si
+			  prefieres el emblema por defecto
+			</div>
+			<div style="margin-bottom: 20px;margin-top:20px;color: white;">
+			  <label>Mensaje del Emblema</label>
+			  <div style="margin-bottom: 20px">
+				  <input class="donator-input-half" maxlength="1024" rows="4" placeholder="Donador de Booyah.tv" id="message-title" style="border: none; !important">
+				<input class="donator-input-half" maxlength="1024" rows="4" placeholder="<3" id="message-subtitle" style="border: none; !important;margin-left: 10px;">
+			  </div>
+			  <img
+				class="btv-badge"
+				rel="badge"
+				src=""
+				style="
+				  max-height: 48px;
+				  width: 18px !important;
+				  max-height: 18px;
+				  width: 30px;
+				"
+				id="emote-preview"
+			  /><span style="color: #16c033 !important" id="nickname-preview"
+				></span
+			  >: hola
+			  <img
+				title="peepoHey"
+				class="emote in-chat-emote"
+				rel="emote"
+				src="https://cdn.betterttv.net/emote/5c0e1a3c6c146e7be4ff5c0c/1x"
+				data-fullemote="https://cdn.betterttv.net/emote/5c0e1a3c6c146e7be4ff5c0c/3x"
+				data-from="Better TTV"
+				style="max-height: 20px"
+			  />
+			</div>
+			<button
+			class="submit-donator">
+			  <span class="button-content send-preferences" id="send-preferences-config"
+				>Actualizar configuración de donador</span
+			  >
+			</button>
+		  </div>
+
+			`
+		}
+
+		dialogHTML += `
+		</div>
+		<img id="config-preview"></img>
+		</div>`
+
+		$("#root")
+		.first()
+		.append(dialogHTML).ready(function () {
+			// bind every checkbox
+			configs.forEach(config => {
+
+				/*// show emote preview while hover config
+				if (config.preview){
+					$( "#config-"+config.name )
+					  .mouseenter( function() {
+						$('#config-preview').attr('src', config.preview);
+					}).mouseleave( function() {
+						//$('#config-preview').attr('src', '');
+					});
+
+				}*/
+
+				// css configuration
+				if (config.type == 'css'){
+
+					$( "#toggle-css-"+config.name ).click(function() {
+						const checked =  $("#toggle-css-"+config.name).is(':checked')
+						toggleCSS(config.name, checked)
+						
+						chrome.storage.local.set({ [config.name]: checked }, function(){
+							console.log('[BOOYAH.TV] '+ config.name +' saved as '+checked)
+						});	
+					});
+				}
+
+				// vip configutation
+				if(isVip){
+					$( "#send-preferences-config" ).click(async function() { 
+						const nickname = $('.nickname-row .value').text()
+						const newColor = $('#colorpicker').val()
+						const emoteUrl = $('#emote-url').val()
+					
+						const messagetitle = $('#message-title').val()
+						const messagesubtitle = $('#message-subtitle').val()
+			
+			
+						const emote = getEmote(emoteUrl)
+					
+						if (!emote && emoteUrl != '') {
+							console.log('Emote is not valid')
+							return
+						}
+						const rawResponse = await fetch(booyahApiBaseURL+'profile/edit', {
+							method: 'POST',
+							headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(
+								{
+									nickname: nickname,
+									newColor: newColor,
+									badgeUrl: emoteUrl,
+									title: messagetitle,
+									subtitle: messagesubtitle
+								}
+							)
+						});
+						
+						const result = await rawResponse.json();
+						
+						if (result.success){
+							alert('Tu emblema a sido enviado a revición, sera actualizado en breve ')
+						}else{
+							console.log('error on update',result)
+						}
+					
+					})
+			
+					
+					fetch(booyahApiBaseURL+'profile/preferences?nickname='+selfUsername)
+					.then(response => response.json())
+					.then(data => {
+						
+						if(data.success){
+							
+							$('#nickname-preview').text(selfUsername)
+		
+							if (data.preferences.title){
+								$('#message-title').val(data.preferences.title)
+							}
+		
+							if (data.preferences.subtitle){
+								$('#message-subtitle').val(data.preferences.subtitle)
+							}
+		
+							if (data.preferences.color){
+								$('#nickname-preview').attr('style', 'color: '+ data.preferences.color +' !important');
+								$('#colorpicker').val(data.preferences.color)
+							}else{
+								$('#colorpicker').val(getColorByNickname(nickname))
+								$('#nickname-preview').attr('style', 'color: '+ getColorByNickname(nickname) +' !important');
+							}
+					
+							if (data.preferences.badge){
+								var url = ''
+								var emoteURL = ''
+				
+								if(data.preferences.badge_source == 'bttv'){
+									url = 'https://cdn.betterttv.net/emote/'+data.preferences.badge+'/1x'
+									emoteURL = 'https://betterttv.com/emotes/'+data.preferences.badge
+									
+								}else if(data.preferences.badge_source == 'ffz'){
+									url = 'https://cdn.frankerfacez.com/emoticon/'+data.preferences.badge+'/1'
+									emoteURL = 'https://www.frankerfacez.com/emoticon/'+data.preferences.badge+'-'
+		
+								}
+					
+								$("#emote-preview").attr('title-subtitle', '<3');
+								$("#emote-preview").attr('data-subtitle', '<3');
+								$("#emote-preview").attr('data-fullimage', url);	
+		
+								$("#emote-preview").attr('src', url);
+								$('#emote-url').val(emoteURL)
+		
+							}
+				
+						}
+					});
+					
+				}
+			})
+			// closes the dialog
+			$( "#closeconfigs" ).click(function() {
+				$(this).closest('.ui-dialog-content').dialog('destroy').remove();
+				$("body").css({ overflow: 'inherit' })
+			});	
+
+		  });
+
+		$( function() {
+			$( "#dialog" ).dialog({
+				draggable: false,
+				resizable: false,
+				modal: true,
+				width: 600,
+				height: 600,
+				// hace que no se haga scroll mientras este visible el dialog
+				create: function(event, ui) {
+					$("body").css({ overflow: 'hidden' })
+				},
+				beforeClose: function(event, ui) {
+					$("body").css({ overflow: 'inherit' })
+				}
+			});
+		});
+
+
+	});
+
+	
+
+	
+
+	
+}
+
+
+// loads user preferences
+
+chrome.storage.local.get(getConfigNames('css'), function(items){
+	console.log(items)
+
+	for (const key in items) {
+		toggleCSS(key, items[key])
+	}
+});
+
+
 // //init estension when the page is first loaded
 
 initExtension();
@@ -3556,7 +3956,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
     url = request.url;
   }
-}).then;
+})
 
 chrome.runtime.sendMessage({
   type: "setUID",

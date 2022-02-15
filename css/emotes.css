@@ -378,7 +378,7 @@ body {
   width: 70px!important;
 }
 .message:hover{
-  background-color: #2c2c2d;
+  background-color: #2c2c2d!important;
 }
 .message-content .username:hover{
   text-decoration: underline;
@@ -549,4 +549,112 @@ body {
 }
 .spam-dono{
   padding: 10px 10px!important;
+}
+/* CONFIG DIALOG */
+#dialog{
+  padding: 0px!important;
+}
+
+.ui-dialog{
+  z-index: 1000;
+  background: #19191d;
+  border-color: #111113;
+  padding: 0px;
+  font-family: 'Open Sans', Amiri, Arial, Helvetica, 'Droid Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica'!important;
+}
+
+.ui-dialog label{
+  color: white!important;
+}
+
+.ui-dialog p{
+  color: white!important;
+}
+
+.config-header{
+  background: hsl(240deg 7% 7%);
+  color: white;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+  font-weight: bold;
+  padding: 4px;
+
+}
+
+.config-icon{
+  width: 28px;
+  padding-right: 10px;
+}
+
+.ui-widget-header{
+  display: none!important;
+}
+
+.ui-widget-overlay.ui-front { /* you want this */
+  opacity:.55;
+  background-color: black;
+  z-index: 1000;
+}
+
+.config-container{
+  padding: 15px;
+}
+
+#closeconfigs{
+  position: absolute;
+  right: 10px;
+  color: #ff1e1e;
+  cursor: pointer;
+  width: 23px;
+  text-align: center;
+}
+.config-container{
+  font-size: 13px;
+}
+.config-subtitle{
+  font-size: 16px;
+  color:white;
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center; /* align vertical */
+}
+.subtitle-icon{
+  width: 25px;
+  padding-right: 5px;
+}
+#config-preview{
+  position: absolute;
+  bottom: 0px;
+  width:100%
+}
+
+.config-group{
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+input[type='checkbox']{
+  width: 14px !important;
+  height: 14px !important;
+  margin: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  outline: 1px solid rgb(36, 36, 36);
+  box-shadow: none;
+  font-size: 0.8em;
+  text-align: center;
+  line-height: 1em;
+  background: #111113;
+}
+
+input[type='checkbox']:checked {
+  background: #8E45FA!important;
+}
+
+.submit-donator{
+  cursor: pointer;
 }

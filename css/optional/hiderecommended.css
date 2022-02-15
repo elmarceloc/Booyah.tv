@@ -1,0 +1,6 @@
+.recommended-streams{
+    display: none!important;
+}
+.recommended-streams:after{
+    content:'aaa'
+}
