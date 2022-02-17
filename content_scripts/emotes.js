@@ -3650,10 +3650,8 @@ const configs = [
 		section: 'page',
 		type: 'css'
 	}
-	// TODO: ver mensajes anteriores, tab autocomplete, home custom
+	// TODO: ver mensajes anteriores, tab autocomplete, home custom, sonido al ser tageado, tts al ser tageado
 ]
-
-//openConfigs()
 
 function openConfigs(){
 
@@ -3683,7 +3681,7 @@ function openConfigs(){
 			<img src="https://cdn.betterttv.net/emote/601ff73c2762ec6cacb97770/1x" class="subtitle-icon"></img>
 			Donador<h2>
 			
-			<div class="config-group"  style="display: grid;>
+			<div class="config-group" style="display: grid;">
 				<label>Color del nombre</label>
 
 				<input
@@ -3701,15 +3699,13 @@ function openConfigs(){
 			  href="https://betterttv.com/emotes/top"
 			  style="color: #7985E6"
 			  target="__blank"
-			  >Better TTV</a
-			>
+			  >Better TTV</a>
 			o
 			<a
 			  href="https://www.frankerfacez.com/emoticons/"
 			  style="color: #7985E6"
 			  target="__blank"
-			  >Franker Face Z</a
-			>
+			  >Franker Face Z</a>
 			)</label>
 			</div>
 		  <div>
