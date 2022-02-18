@@ -1,6 +1,3 @@
-.btv-badge{
-    display: none!important;
-}
-.message-badge{
+.donator-badge,.points-badge,.chatter-badge{
     display: none!important;
 }

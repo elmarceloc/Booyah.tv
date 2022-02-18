@@ -662,3 +662,7 @@ input[type='checkbox']:checked {
 #settingsbtn img{
   width: 24px!important;
 }
+
+.components-desktop-chatroom .components-profile-card-image{
+  display: none!important;
+}

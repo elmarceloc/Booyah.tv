@@ -9,23 +9,3 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       });
     }
   })
-
-  /*
-  var uid = null
-  
-  chrome.runtime.onMessage.addListener(
-    function(message, sender, sendResponse) {
-        switch(message.type) {
-            case "setUID":
-                uid = message.uid;
-                break;
-            case "getUID":
-              if(uid){
-                sendResponse(uid);
-              }
-              break;
-            default:
-                console.error("Unrecognised message: ", message);
-        }
-    }
-  );*/

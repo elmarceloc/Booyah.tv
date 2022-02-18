@@ -11,6 +11,12 @@ const booyahApiBaseURL = "https://bapi.zzls.xyz/api/" // "https://bapi.zzls.xyz/
 
 var isVip = false
 
+var configjs = {
+	isNotificationSound: false,
+	hidebot: false,
+	hidenusers: false
+}
+
 // twitch id grabed at https://api.twitch.tv/kraken/users?login={username} -h Accept = application/vnd.twitchtv.v5+json, Client-ID = cclk5hafv1i7lksfauerry4w7ythu2
 
 var channel;
@@ -1339,13 +1345,13 @@ function addBadgeHTML(container, user){
 
 	if (isPopup) src = user.fullurl
 
-	const badgeHTML = `<img title="${user.title}" src="${src}" class="btv-badge" data-subtitle="${user.subtitle}" data-fullimage="${user.fullurl}" rel="badge">`
+	const badgeHTML = `<img title="${user.title}" src="${src}" class="btv-badge donator-badge" data-subtitle="${user.subtitle}" data-fullimage="${user.fullurl}" rel="badge">`
 	$(container).prepend(badgeHTML); 
 }
 
 function addBadges(usernameContainer, username) {
 	
-	// change channel badges
+	// changes deafault booyah badges for twitch-like badges
 	
 	$(usernameContainer).find('.badge-icon').each(function( index ) {
 
@@ -1370,11 +1376,11 @@ function addBadges(usernameContainer, username) {
 			$( this )[0].src = 'https://static-cdn.jtvnw.net/badges/v1/3267646d-33f0-4b17-b3df-f923a41db1d0/1'
 		}
 	  });
-	
+
+	// donator / streamer badge
 
 	const booyahtvUser = channelBooyahtvBadges[username.innerText]
 
-	// adds the badge
 	if (booyahtvUser != null) {
 		// if the user has multiple badges (array)
 		if(Array.isArray(booyahtvUser)){
@@ -1385,7 +1391,8 @@ function addBadges(usernameContainer, username) {
 			addBadgeHTML(usernameContainer, booyahtvUser)
 		}
 	}	
-	// fix
+	// Channel points badge
+
 	if (typeof hashedPoints !== 'undefined'){
 
 		const user = hashedPoints[username.innerText.toLowerCase()]
@@ -1396,11 +1403,11 @@ function addBadges(usernameContainer, username) {
 
 			if (isPopup) src = channelBadges[user[0]].image_url_4x
 
-			let badgeHTML = `<img title="Top #${user[1]}" src="${src}" class="btv-badge" data-subtitle="${user[2]} Puntos." data-fullimage="${channelBadges[user[0]].image_url_4x}" rel="badge">`
+			let badgeHTML = `<img title="Top #${user[1]}" src="${src}" class="btv-badge points-badge" data-subtitle="${user[2]} Puntos." data-fullimage="${channelBadges[user[0]].image_url_4x}" rel="badge">`
 			$(usernameContainer).prepend(badgeHTML); 
 		}	
 	}
-
+	// chatter badge
 	if (typeof hashedChatters !== 'undefined'){
 
 		const user = hashedChatters[username.innerText.toLowerCase()]
@@ -1412,7 +1419,7 @@ function addBadges(usernameContainer, username) {
 
 			if (isPopup) src = srcfull
 
-			const badgeHTML = `<img title="Top #${user[0]}" src="${src}" class="btv-badge" data-subtitle="${user[1]} Mensajes." data-fullimage="${srcfull}" rel="badge">`
+			const badgeHTML = `<img title="Top #${user[0]}" src="${src}" class="btv-badge chatter-badge" data-subtitle="${user[1]} Mensajes." data-fullimage="${srcfull}" rel="badge">`
 			$(usernameContainer).prepend(badgeHTML); 
 		}	
 	}
@@ -1485,6 +1492,12 @@ function replaceBonfires(message) {
 	}
 }
 
+function removeMessage(message, username) {
+	if(configjs.hidebot && username.textContent == 'StreamVip'){	
+		message.remove()
+	}
+}
+
 // checks if the user is tagged by another user and adds the event to tag another user
 
 function checkTag(event, messageContent, usernameContainer,usernameElement, messageContainer) {
@@ -1503,7 +1516,7 @@ function checkTag(event, messageContent, usernameContainer,usernameElement, mess
 			taggedUsers.push(selfUsername)
 
 		}
-
+		console.log(taggedUsers)
 		taggedUsers.forEach(username =>{
 			username = username.replace('@','').replaceAll('_',' ')
 
@@ -1515,7 +1528,9 @@ function checkTag(event, messageContent, usernameContainer,usernameElement, mess
 				event.target.style.background = 'rgb(197 25 25 / 32%)' // makes the message red
 				messageContainer.style.color = 'rgb(255 255 255)' // makes the username white for more readeability
 	
-				//blip.play();
+				/*if (configjs.isNotificationSound) {
+					blip.play();
+				}*/
 			}
 		})
 	}
@@ -1570,6 +1585,8 @@ function modifyMessage(event) {
 		var usernameElement = usernameContainer.childNodes[usernameContainer.childNodes.length - 1]; // EX: <span> elmarceloc: </span>
 
 		var messageText = messageContainer.childNodes[messageContainer.childNodes.length - 1] // EX: <span> hola </span>
+
+		removeMessage(message, usernameElement)
 
 		/*console.log('messageContainer:',messageContainer)
 
@@ -3589,12 +3606,12 @@ function toggleCSS(file, isChecked) {
 }
 
 function getConfigNames(type) {
-	return configs.reduce((results, config) => {
-		if(type == 'css'){
-			results.push(config.name);
-			return results;
-		}
-	}, []);
+	var results = []
+
+	configs.forEach(config => {
+		if (type == config.type) results.push(config)
+	})
+	return Object.assign({}, results);
 }
 
 function addConfigGroup(savedConfigs, section){
@@ -3606,11 +3623,16 @@ function addConfigGroup(savedConfigs, section){
 			const savedConfig = Object.keys(savedConfigs).find(key=> key === config.name);
 
 			html += `
-			<div class="config-group" id="config-${config.name}">
-				<input ${savedConfigs[savedConfig] ? 'checked' : ''} type="checkbox" id="toggle-${config.type}-${config.name}"></input>
-				<label for="toggle-${config.type}-${config.name}">${config.label}</label>
-			</div>
-			`
+			<div class="config-group" id="config-${config.name}">`
+
+			if(config.input == 'text' || config.input == 'array'){
+				html+= `<input value="${savedConfigs[savedConfig]}" placeholder="${config.placeholder}" id="toggle-${config.type}-${config.name}"></input>`
+			}else{
+				html+= `<input ${savedConfigs[savedConfig] ? 'checked' : ''} type="checkbox" id="toggle-${config.type}-${config.name}"></input>`
+			}
+
+			html+=`<label for="toggle-${config.type}-${config.name}">${config.label}</label></div>`
+			
 		}
 
 	})
@@ -3632,6 +3654,27 @@ const configs = [
 		section: 'chat',
 		type: 'css',
 	},
+	/*{
+		name: 'isNotificationSound',
+		label: 'Sonido al tag',
+		section: 'chat',
+		type: 'js',
+	},*/
+	{
+		name: 'hidebot',
+		label: 'Ocultar mensajes del bot',
+		section: 'chat',
+		type: 'js',
+		input: 'bool'
+	},
+	/*{
+		name: 'hidenusers',
+		label: 'Ocultar usuarios',
+		section: 'chat',
+		type: 'js',
+		input: 'array',
+		placeholder: 'elmarceloc,cristianghost,SDCG'
+	},*/
 	{
 		name: 'distractfree',
 		label: 'Modo "libre de distracciones"',
@@ -3797,11 +3840,36 @@ function openConfigs(){
 						toggleCSS(config.name, checked)
 						
 						chrome.storage.local.set({ [config.name]: checked }, function(){
-							console.log('[BOOYAH.TV] '+ config.name +' saved as '+checked)
+							console.log('[BOOYAH.TV] CSS '+ config.name +' saved as '+checked)
 						});	
 					});
 				}
 
+				// js configuration
+				if (config.type == 'js'){
+					$( "#toggle-js-"+config.name ).click(function() {
+						var newValue;
+						switch (config.input) {
+							case 'bool':
+								newValue =  $("#toggle-js-"+config.name).is(':checked')
+								break;
+							case 'array':
+								newValue =  $("#toggle-js-"+config.name).val().split(',')
+								if (newValue = ['']) newValue = false
+								break;
+							case 'text':
+								newValue =  $("#toggle-js-"+config.name).val()
+								break;	
+						}
+
+						configjs[config.name] = newValue
+
+						chrome.storage.local.set({ [config.name]: newValue }, function(){
+							console.log('[BOOYAH.TV] JS '+ config.name +' saved as '+newValue)
+						});	
+						
+					});
+				}
 			})
 
 			// vip configutation
@@ -3994,23 +4062,27 @@ function openConfigs(){
 
 	});
 
-	
-
-	
-
-	
 }
 
 
 // loads user preferences
 
 chrome.storage.local.get(getConfigNames('css'), function(items){
-	console.log(items)
+	console.log('css configurations',items)
 
 	for (const key in items) {
 		toggleCSS(key, items[key])
 	}
 });
+
+chrome.storage.local.get(getConfigNames('js'), function(items){
+	console.log('js configurations',items)
+
+	for (const key in items) {
+		configjs[key] = items[key]
+	}
+});
+
 
 
 // //init estension when the page is first loaded
