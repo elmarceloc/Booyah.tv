@@ -14,7 +14,7 @@ var isVip = false
 var configjs = {
 	isNotificationSound: false,
 	hidebot: false,
-	hidenusers: false,
+	hiddenusers: false,
 	colorbg: false,
 	hidegifts: false,
 	hidebooyahemotes: false
@@ -3686,7 +3686,7 @@ const configs = [
 	},
 	
 	/*{
-		name: 'hidenusers',
+		name: 'hiddenusers',
 		label: 'Ocultar usuarios',
 		section: 'chat',
 		type: 'js',
