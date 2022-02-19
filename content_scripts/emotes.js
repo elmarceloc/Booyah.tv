@@ -1465,7 +1465,7 @@ function changeUsernameColor(username, messageContainer, textcontent) {
 	// TODO: if mod
 	if(configjs.colorbg){
 		if (textcontent.length > 50 && !textcontent.includes('sticker-image') && !textcontent.includes('message-gift-icon')){
-			messageContainer.style.background = color +"11"
+			messageContainer.style.background = color +"44"
 		}
 	}
 	
@@ -4098,7 +4098,7 @@ function openConfigs(){
 
 
 // loads user preferences
-
+console.log(getConfigNames('css'))
 chrome.storage.local.get(getConfigNames('css'), function(items){
 	console.log('css configurations',items)
 
