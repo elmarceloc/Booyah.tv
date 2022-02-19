@@ -6,10 +6,6 @@
 
 	"permissions": ["tabs","storage"],
 
-	"optional_permissions": [
-		"https://betterttv.com/emotes/*"
-	],
-
 	"icons": {
 		"16": "16.png",
 		"48": "48.png",
