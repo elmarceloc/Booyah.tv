@@ -14,7 +14,10 @@ var isVip = false
 var configjs = {
 	isNotificationSound: false,
 	hidebot: false,
-	hidenusers: false
+	hidenusers: false,
+	colorbg: false,
+	hidegifts: false,
+	hidebooyahemotes: false
 }
 
 // twitch id grabed at https://api.twitch.tv/kraken/users?login={username} -h Accept = application/vnd.twitchtv.v5+json, Client-ID = cclk5hafv1i7lksfauerry4w7ythu2
@@ -1427,8 +1430,7 @@ function addBadges(usernameContainer, username) {
 
 }
 
-function changeUsernameColor(username) {
-
+function changeUsernameColor(username, messageContainer, textcontent) {
 	if (username === null) return
 
 	let color = "#6525a1";
@@ -1460,7 +1462,12 @@ function changeUsernameColor(username) {
 		}
 	}	
 
-
+	// TODO: if mod
+	if(configjs.colorbg){
+		if (textcontent.length > 50 && !textcontent.includes('sticker-image') && !textcontent.includes('message-gift-icon')){
+			messageContainer.style.background = color +"11"
+		}
+	}
 	
 
 	username.style.color = color;
@@ -1493,7 +1500,11 @@ function replaceBonfires(message) {
 }
 
 function removeMessage(message, username) {
-	if(configjs.hidebot && username.textContent == 'StreamVip'){	
+	const hidebot = configjs.hidebot && username.textContent == 'StreamVip' 
+	const gifts = configjs.hidegifts && message.innerHTML.includes('message-gift-icon')
+	const emotesbooyah = configjs.hidebooyahemotes && message.innerHTML.includes('sticker-image')
+	
+	if(hidebot || gifts || emotesbooyah){	
 		message.remove()
 	}
 }
@@ -1516,7 +1527,6 @@ function checkTag(event, messageContent, usernameContainer,usernameElement, mess
 			taggedUsers.push(selfUsername)
 
 		}
-		console.log(taggedUsers)
 		taggedUsers.forEach(username =>{
 			username = username.replace('@','').replaceAll('_',' ')
 
@@ -1606,7 +1616,7 @@ function modifyMessage(event) {
 
 		checkTag(event, messageText.innerHTML,usernameContainer,usernameElement, messageContainer)
 
-		changeUsernameColor(usernameElement)
+		changeUsernameColor(usernameElement, message, messageText.innerHTML)
 
 		// se acorta el link despues de agregar badges, checkear tags,etc.
 		shortenUsernames(usernameElement)
@@ -3609,9 +3619,9 @@ function getConfigNames(type) {
 	var results = []
 
 	configs.forEach(config => {
-		if (type == config.type) results.push(config)
+		if (type == config.type) results.push(config.name)
 	})
-	return Object.assign({}, results);
+	return results
 }
 
 function addConfigGroup(savedConfigs, section){
@@ -3667,6 +3677,14 @@ const configs = [
 		type: 'js',
 		input: 'bool'
 	},
+	{
+		name: 'hidebooyahemotes',
+		label: 'Ocultar emotes de booyah',
+		section: 'chat',
+		type: 'js',
+		input: 'bool'
+	},
+	
 	/*{
 		name: 'hidenusers',
 		label: 'Ocultar usuarios',
@@ -3692,6 +3710,13 @@ const configs = [
 		label: 'Ocultar canales recomendados',
 		section: 'page',
 		type: 'css'
+	},
+	{
+		name: 'colorbg',
+		label: 'Separar mensajes por color',
+		section: 'mod',
+		type: 'js',
+		input: 'bool'
 	}
 	// TODO: ver mensajes anteriores, tab autocomplete, home custom, sonido al ser tageado, tts al ser tageado
 ]
@@ -3702,10 +3727,13 @@ function openConfigs(){
 		var dialogHTML = `
 		<div id="dialog" title="Basic dialog">
 		
+		
+		
 		<div class="config-header">
 		<img src="https://cdn.betterttv.net/emote/5b490e73cf46791f8491f6f4/1x" class="config-icon"></img> Configuración de booyah tv
 		<span id="closeconfigs">X</span>
 		</div>
+		
 		<div class="config-container">
 
 		<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/61e89a8606fd6a9f5be15e68/2x" class="subtitle-icon"></img>El chat<h2>
@@ -3717,6 +3745,10 @@ function openConfigs(){
 		
 		dialogHTML += addConfigGroup(savedConfigs, 'page')
 
+
+		dialogHTML += `<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/61542fcfb63cc97ee6d3df83/1x" class="subtitle-icon"></img>Mods<h2>`
+
+		dialogHTML += addConfigGroup(savedConfigs, 'mod')
 
 		if (isVip) {
 			dialogHTML += `<h2 class="config-subtitle">

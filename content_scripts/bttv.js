@@ -19,9 +19,6 @@ function initExtension() {
 
         console.log(username, emoteName, emoteID)
 
-
- 
-
         fetch(baseurl + '/emotes/' + username)
             .then(response => response.json())
             .then(data => {

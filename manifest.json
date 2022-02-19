@@ -1,10 +1,15 @@
 {
 	"name": "Booyah.tv",
-	"version": "1.47",
+	"version": "1.49",
 	"description": "Mejora la experiencia de Booyah.live",
 	"manifest_version": 3,
 
 	"permissions": ["tabs","storage"],
+
+	"optional_permissions": [
+		"https://betterttv.com/emotes/*"
+	],
+
 	"icons": {
 		"16": "16.png",
 		"48": "48.png",
