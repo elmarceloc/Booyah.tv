@@ -1,6 +1,6 @@
 {
 	"name": "Booyah.tv",
-	"version": "1.50",
+	"version": "1.52",
 	"description": "Mejora la experiencia de Booyah.live",
 	"manifest_version": 3,
 
@@ -58,7 +58,27 @@
 		}
 	],
 	"web_accessible_resources": [
-		{  "resources":["css/optional/interlined.css","css/optional/hidebadges.css","css/optional/distractfree.css","css/optional/hideviewers.css","css/optional/hiderecommended.css","resources/icons/emote-menu.png","resources/icons/twitch.svg","resources/badges/staff.png", "resources/sounds/blip.wav"],
+		{  "resources":[
+			"css/optional/interlined.css",
+			"css/optional/hidebadges.css",
+			"css/optional/distractfree.css",
+			"css/optional/hideviewers.css",
+			"css/optional/hiderecommended.css",
+
+			"css/themes/chatofflove.css",
+			"css/themes/monouwu.css",
+			"css/themes/cynthia.css",
+			"css/themes/moaigr.css",
+			"css/themes/dylantero.css",
+			"css/themes/furseloc.css",
+			"css/themes/homero.css",
+			"css/themes/bingus.css",
+			"css/themes/bastordo.css",
+
+			"resources/icons/emote-menu.png",
+			"resources/icons/twitch.svg",
+			"resources/badges/staff.png",
+			"resources/sounds/blip.wav"],
 		    "matches": ["https://booyah.live/*"]
 		}
 	],

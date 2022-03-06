@@ -1,0 +1,22 @@
+.desktop-header{
+    background-image: url(https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_1ad39932d94044beb23f04fd8f44d371/static/light/3.0);
+    background-size: contain;
+    background-repeat-x: no-repeat;
+    background-color: hsl(45deg 29% 40%)!important;
+    background-position-x: 130px;
+}
+
+.send-btn{
+    background-image: linear-gradient(265deg, #847548 0%, #847548 100%)!important;
+    color: white!important;
+}
+
+.components-card .video-info, .vod-card .video-info{
+    background-color: #847548!important;
+}
+
+.views-channel-offline-layer{
+    background-image: url(https://i.imgur.com/sqcdnOh.png);
+    background-size: cover!important;
+    background-position-y: center!important;
+}

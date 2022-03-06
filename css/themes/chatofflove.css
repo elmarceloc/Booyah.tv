@@ -1,0 +1,22 @@
+.desktop-header{
+    background-image: url(https://cdn.betterttv.net/emote/6209fbf806fd6a9f5be476fc/3x)!important;
+    background-size: contain!important;
+    background-repeat-x: no-repeat!important;
+    background-color: hsl(351deg 61% 45%)!important;
+    background-position-x: 130px!important;
+}
+.send-btn{
+    background-image: linear-gradient(265deg, hsl(351deg 61% 45%) 0%, hsl(351deg 61% 45%) 100%)!important;
+    color: white!important;
+}
+.components-card .video-info, .vod-card .video-info{
+    background-color: hsl(351deg 61% 45%)!important;
+}
+.views-channel-offline-layer{
+    background-image: url(https://i.imgur.com/EICQnXL.png);
+    background-size: contain;
+    background-position-y: center!important;
+    background-repeat: no-repeat;
+    background-position-x: 110%;
+    background-color: #561520;
+}

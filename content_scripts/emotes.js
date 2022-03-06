@@ -3009,99 +3009,11 @@ function insertSettings() {
 
 }
 
-function insertClipBtn(parent) {
-  var clipBtnHTML = `
-
-		<!-- Modal HTML embedded directly into document -->
-		<div id="clipModal" class="modal" style="z-index: 100;">
-		<div id="clipMessage" style="display:none">¡link del clip copiado!</div>
-		<h1><svg width="48px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fill="#e6269c" d="M14.594 4.495l-.585-1.91L15.922 2l.585 1.91-1.913.585zM11.14 3.46l.585 1.911 1.913-.584-.585-1.91-1.913.583zM8.856 6.247l-.584-1.91 1.912-.584.585 1.91-1.913.584zM5.403 5.213l.584 1.91L7.9 6.54l-.585-1.911-1.912.584zM2.534 6.09L3.118 8l1.913-.584-.585-1.91-1.912.583zM5 9H3v7a2 2 0 002 2h10a2 2 0 002-2V9h-2v7H5V9z"></path><path fill="#e6269c" d="M8 9H6v2h2V9zM9 9h2v2H9V9zM14 9h-2v2h2V9z"></path></g></svg>Crear Clip.</h1>
-		<div>
-		Nombre: 
-		<input id="clipName" pleaceholder=""></input>
-		</div>
-		<button class="components-button components-button-size-small components-button-type-outlined-dark desktop components-button-inline components-button-has-icon" id="clipBtn">Copiar link del clip</button>
-		</div>
-
-		<a href="#clipModal"  id="createClip" rel="modal:open" title="Crear Clip" target="_blank" class="createclip components-button components-button-size-small components-button-type-outlined-dark desktop components-button-inline components-button-has-icon">
-		<span class="button-content">
-		<i class="follow-btn-divider"></i>Crear Clip
-		</span>
-		</a>
-	`;
-
-  parent
-    .first()
-    .append(clipBtnHTML)
-    .ready(function () {
-      clipBtn.addEventListener("click", function (event) {
-        var clipBtn = document.querySelector("#clipBtn");
-        var clipName = document.querySelector("#clipName");
-        var clipMessage = document.querySelector("#clipMessage");
-
-        console.log("clip " + clipName.value);
-
-        if (clipName.value == "") return;
-
-        var nicknameParam = "";
-
-        if (selfUsername !== null) {
-          nicknameParam = `&nickname=${selfUsername.replaceAll(" ", "+")}`;
-        }
-
-        var video = document.getElementById("vjs_video_3_html5_api");
-
-        copyTextToClipboard(
-          `${window.location.href.split("?")[0]}?timestamp=${Math.floor(
-            video.currentTime
-          )}&clipname=${clipName.value.replaceAll(" ", "+")}${nicknameParam}`
-        );
-
-        clipMessage.style.display = "block";
-
-        setTimeout(function () {
-          clipMessage.style.display = "none";
-        }, 5000);
-      });
-    });
-}
-
 function insertVOD(currentURL) {
   const segments = new URL(currentURL).pathname.split("/");
   const VODID = segments.pop() || segments.pop(); // Handle potential trailing slash
 
   let url = `https://booyah.live/api/v3/playbacks/${VODID}`;
-
-  setTimeout(function () {
-    var url = new URL(currentURL);
-
-    var timestamp = url.searchParams.get("timestamp");
-    var clipname = url.searchParams.get("clipname");
-    var nickname = url.searchParams.get("nickname");
-
-    console.log(clipname);
-
-    if (timestamp) {
-      var video = document.getElementById("vjs_video_3_html5_api"); //factorise selectors to consts
-      video.currentTime = timestamp; // set time (in secounds)
-    }
-
-    if (nickname) {
-      nickname = nickname.replaceAll("+", " ");
-      document.querySelector(".video-date-count").innerHTML =
-        "clipeado por " + nickname;
-    }
-
-    if (clipname) {
-      document.querySelector(".video-bottom .video-title").innerHTML =
-        '<span style="color:#4949ff">[CLIP]</span> ' +
-        clipname.replaceAll("+", " ");
-    }
-  }, 2000);
-
-  if (!$("#createClip").length) {
-    insertClipBtn($(".video-btns"));
-  }
 
   console.log(VODID, url);
 
@@ -3111,11 +3023,11 @@ function insertVOD(currentURL) {
       var resolution = data.playback.endpoint_list[0].resolution; // 1080
       var downloadurl = data.playback.endpoint_list[0].download_url;
 
-      // todo crear inicio/fin del clip
-
       var vodHTML = `
-		<a id="downloadVOD" title="Desacargar VOD en ${resolution}p" target="_blank" download="${data.playback.name}.mp4" href="${downloadurl}" class="downloadvod components-button components-button-size-small components-button-type-outlined-dark desktop components-button-inline components-button-has-icon">
-			<span class="button-content">
+
+
+		<a style="border-radius: 30px;" id="downloadVOD" title="Desacargar VOD en ${resolution}p" target="_blank" download="${data.playback.name}.mp4" href="${downloadurl}" class="downloadvod components-button components-button-size-small components-button-type-orange desktop components-button-inline components-button-has-icon">
+			<span class="button-content" style="color:white">
 			<i class="follow-btn-divider"></i>Descargar VOD
 			</span>
 		</a>`;
@@ -3293,23 +3205,6 @@ function playMinigame(minigame) {
     "width=675,height=735, top=" + top + ", left=" + left
   );
 }
-
-// delay fixer
-
-var videexists = setInterval(function () {
-	video = document.querySelector("video");
-  
-	if (video && !video.paused) {
-	  clearInterval(videexists);
-  
-	  var videoTime = video.duration;
-	  if (videoTime) {
-		video.currentTime = videoTime;
-  
-		console.log("[Booyah.TV] video skiped to last loaded frame: ", videoTime);
-	  }
-	}
-  }, 3000);
 
 //  AUTOCOMPLETE
 
@@ -3615,6 +3510,27 @@ function toggleCSS(file, isChecked) {
 
 }
 
+function setTheme(file) {
+	// deletes the theme if exist
+	var linkNode = document.getElementById('theme');
+	if(linkNode){
+		linkNode.parentNode.removeChild(linkNode);
+		console.log('[BOOYAH.TV] theme unloaded')
+	}
+
+	if (file == 'default' || typeof file === 'undefined') return
+	
+	var link = document.createElement("link");
+
+	link.href = chrome.runtime.getURL('css/themes/' + file + '.css');
+	link.id = 'theme';
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.getElementsByTagName("html")[0].appendChild(link);
+
+	console.log('[BOOYAH.TV] '+ file +'.css loaded')
+}
+
 function getConfigNames(type) {
 	var results = []
 
@@ -3637,11 +3553,21 @@ function addConfigGroup(savedConfigs, section){
 
 			if(config.input == 'text' || config.input == 'array'){
 				html+= `<input value="${savedConfigs[savedConfig]}" placeholder="${config.placeholder}" id="toggle-${config.type}-${config.name}"></input>`
-			}else{
+			}else if(config.input == 'bool'){
 				html+= `<input ${savedConfigs[savedConfig] ? 'checked' : ''} type="checkbox" id="toggle-${config.type}-${config.name}"></input>`
+			}else if(config.input == 'theme'){
+				html+= `<img class="config-theme" id="toggle-${config.type}-${config.name}" src="${config.img}">`
+				if (config.note) {	
+					html+= `<span class="config-note">${config.note}</span>`
+				}
+				html+= `</img>`
 			}
 
-			html+=`<label for="toggle-${config.type}-${config.name}">${config.label}</label></div>`
+			if(config.input != 'theme'){	
+				html+=`<label for="toggle-${config.type}-${config.name}">${config.label}</label>`
+			}
+
+			html+=`</div>`
 			
 		}
 
@@ -3657,12 +3583,14 @@ const configs = [
 		label: 'Ocultar emblemas',
 		section: 'chat',
 		type: 'css',
+		input: 'bool'
 	},
 	{
 		name: 'interlined',
 		label: 'Separar mensajes',
 		section: 'chat',
 		type: 'css',
+		input: 'bool'
 	},
 	/*{
 		name: 'isNotificationSound',
@@ -3697,19 +3625,22 @@ const configs = [
 		name: 'distractfree',
 		label: 'Modo "libre de distracciones"',
 		section: 'page',
-		type: 'css'
+		type: 'css',
+		input: 'bool'
 	},
 	{
 		name: 'hideviewers',
 		label: 'Ocultar viewers',
 		section: 'page',
-		type: 'css'
+		type: 'css',
+		input: 'bool'
 	},
 	{
 		name: 'hiderecommended',
 		label: 'Ocultar canales recomendados',
 		section: 'page',
-		type: 'css'
+		type: 'css',
+		input: 'bool'
 	},
 	{
 		name: 'colorbg',
@@ -3717,7 +3648,89 @@ const configs = [
 		section: 'mod',
 		type: 'js',
 		input: 'bool'
-	}
+	},
+	{
+		name: 'default',
+		label: 'Por defecto',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/VdswMUQ.png',
+		note: 'Por defecto'
+	},
+	{
+		name: 'chatofflove',
+		label: 'ChatOfflove',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/6c1JzkH.png',
+		note: 'Artista: bcl el batido'
+	},
+	{
+		name: 'monouwu',
+		label: 'MonoUWU',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/F8w4vQR.png',
+	},
+	{
+		name: 'cynthia',
+		label: 'Cytnhia',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/pWqrtFS.png',
+	},
+	{
+		name: 'moaigr',
+		label: 'MoaiGR',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/Yi7Zy8t.png',
+	},
+	{
+		name: 'dylantero',
+		label: 'Dylantero',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/eeoFV5f.png',
+	},
+	{
+		name: 'homero',
+		label: 'homero',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/8GzX96l.png',
+	},
+	{
+		name: 'bingus',
+		label: 'bingus',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/fQMPEgg.png',
+	},
+	{
+		name: 'bastordo',
+		label: 'bastordo',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/wjjxxQj.png',
+	},
+	{
+		name: 'furseloc',
+		label: 'furseloc',
+		section: 'themes',
+		type: 'theme',
+		input: 'theme',
+		img: 'https://i.imgur.com/lkTIvrx.png',
+	},
 	// TODO: ver mensajes anteriores, tab autocomplete, home custom, sonido al ser tageado, tts al ser tageado
 ]
 
@@ -3734,27 +3747,40 @@ function openConfigs(){
 		<span id="closeconfigs">X</span>
 		</div>
 		
-		<div class="config-container">
-
-		<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/61e89a8606fd6a9f5be15e68/2x" class="subtitle-icon"></img>El chat<h2>
-		`
-
-		dialogHTML += addConfigGroup(savedConfigs, 'chat')
-
-		dialogHTML += `<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/6152a3e7b63cc97ee6d3b203/1x" class="subtitle-icon"></img>La página<h2>`
-		
-		dialogHTML += addConfigGroup(savedConfigs, 'page')
 
 
-		dialogHTML += `<h2 class="config-subtitle"><img src="https://cdn.betterttv.net/emote/61542fcfb63cc97ee6d3df83/1x" class="subtitle-icon"></img>Mods<h2>`
-
-		dialogHTML += addConfigGroup(savedConfigs, 'mod')
+		<div class="tabs">
+		<ul id="tabs-nav">
+			<li><a href="#tab1"><img src="https://cdn.betterttv.net/emote/61e89a8606fd6a9f5be15e68/2x" class="subtitle-icon"></img> Chat</a></li>
+			<li><a href="#tab2"><img src="https://cdn.betterttv.net/emote/6152a3e7b63cc97ee6d3b203/1x" class="subtitle-icon"></img>Pagina</a></li>
+			<li><a href="#tab3"><img src="https://cdn.betterttv.net/emote/61542fcfb63cc97ee6d3df83/1x" class="subtitle-icon"></img>Moderación</a></li>
+			<li><a href="#tab4"><img src="https://cdn.betterttv.net/emote/6209fbf806fd6a9f5be476fc/1x" class="subtitle-icon"></img>Temas</a></li>`
+			if (isVip){
+				dialogHTML += `<li><a href="#tab5"><img src="https://cdn.betterttv.net/emote/601ff73c2762ec6cacb97770/1x" class="subtitle-icon"></img>Donador</a></li>`
+			}
+		dialogHTML += `
+		</ul>
+		<div id="tabs-content">
+			<div id="tab1" class="tab-content">`
+				dialogHTML += addConfigGroup(savedConfigs, 'chat')
+				dialogHTML += `
+			</div>
+			<div id="tab2" class="tab-content">`
+				dialogHTML += addConfigGroup(savedConfigs, 'page')
+				dialogHTML += `
+			</div>
+			<div id="tab3" class="tab-content">`
+				dialogHTML += addConfigGroup(savedConfigs, 'mod')
+				dialogHTML += `
+			</div>
+			<div id="tab4" class="tab-content">`
+				dialogHTML += addConfigGroup(savedConfigs, 'themes')
+				dialogHTML += `
+			</div>`
 
 		if (isVip) {
-			dialogHTML += `<h2 class="config-subtitle">
-			<img src="https://cdn.frankerfacez.com/emote/244322/1" class="subtitle-icon"></img>
-			<img src="https://cdn.betterttv.net/emote/601ff73c2762ec6cacb97770/1x" class="subtitle-icon"></img>
-			Donador<h2>
+			dialogHTML += `
+			<div id="tab5" class="tab-content">
 			
 			<div class="config-group" style="display: grid;">
 				<label>Color del nombre</label>
@@ -3838,18 +3864,44 @@ function openConfigs(){
 			  >
 			</button>
 		  </div>
-
 			`
 		}
 
 		dialogHTML += `
+
 		</div>
-		<img id="config-preview"></img>
-		</div>`
+		</div>
+	</div>`
 
 		$("#root")
 		.first()
 		.append(dialogHTML).ready(function () {
+
+			// tabs
+
+			// Show the first tab and hide the rest
+			$('#tabs-nav li:first-child').addClass('active');
+			$('.tab-content').hide();
+			$('.tab-content:first').show();
+
+			// Click function
+			$('#tabs-nav li').click(function(){
+				$('#tabs-nav li').removeClass('active');
+				$(this).addClass('active');
+				$('.tab-content').hide();
+				
+				var activeTab = $(this).find('a').attr('href');
+				$(activeTab).show();
+				return false;
+			});
+
+
+
+
+
+
+
+
 			// bind every checkbox
 			configs.forEach(config => {
 
@@ -3863,6 +3915,19 @@ function openConfigs(){
 					});
 
 				}*/
+
+				// theme
+
+				if (config.type == 'theme'){
+
+					$( "#toggle-theme-"+config.name ).click(function() {
+						setTheme(config.name)
+						
+						chrome.storage.local.set({ theme: [config.name] }, function(){
+							console.log('[BOOYAH.TV] CSS THEME '+ config.name)
+						});	
+					});
+				}
 
 				// css configuration
 				if (config.type == 'css'){
@@ -4099,6 +4164,15 @@ function openConfigs(){
 
 // loads user preferences
 console.log(getConfigNames('css'))
+
+chrome.storage.local.get('theme', function(config){
+	console.log('css theme',config)
+
+	setTheme(config.theme)	
+
+	
+});
+
 chrome.storage.local.get(getConfigNames('css'), function(items){
 	console.log('css configurations',items)
 

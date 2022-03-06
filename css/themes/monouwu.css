@@ -1,0 +1,16 @@
+.desktop-header{
+    background-image: url(https://i.imgur.com/VDSA3Qe.gif);
+    background-size: contain;
+    background-repeat-x: no-repeat;
+    background-color: hsl(39deg 72% 41%);
+    background-position-x: 130px;
+}
+
+.views-channel-offline-layer{
+    background-image: url(https://i.imgur.com/WYndI6E.png);
+    background-size: contain;
+    background-position-y: center!important;
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-color: white;
+}
