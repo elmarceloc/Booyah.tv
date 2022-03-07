@@ -719,3 +719,7 @@ ul#tabs-nav li.active {
 .config-theme{
   cursor: pointer;
 }
+
+.desktop-header{
+  background-repeat: no-repeat!important;
+}

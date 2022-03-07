@@ -1,6 +1,6 @@
 {
 	"name": "Booyah.tv",
-	"version": "1.50",
+	"version": "1.52",
 	"description": "Mejora la experiencia de Booyah.live",
 	"manifest_version": 2,
 	"background": {
@@ -11,7 +11,7 @@
     		"gecko": {
       			"strict_min_version": "60.0",
       			"id": "{e81430dc-cecc-4d51-8ccf-08716d5cb5ec}"
-    			}
+    		}
   	},
 	"permissions": [
 		"storage",
@@ -56,10 +56,22 @@
 		"css/optional/hidebadges.css",
 		"css/optional/distractfree.css",
 		"css/optional/hideviewers.css",
+		"css/optional/hiderecommended.css",
+
 		"resources/icons/emote-menu.png",
 		"resources/icons/twitch.svg",
 		"resources/badges/staff.png",
 		"resources/sounds/blip.wav",
-		"halloween/emote-menu.png"
+		"halloween/emote-menu.png",
+
+		"css/themes/chatofflove.css",
+		"css/themes/monouwu.css",
+		"css/themes/cynthia.css",
+		"css/themes/moaigr.css",
+		"css/themes/dylantero.css",
+		"css/themes/furseloc.css",
+		"css/themes/homero.css",
+		"css/themes/bingus.css",
+		"css/themes/bastordo.css"
 	]
 }
